@@ -5,11 +5,9 @@
 
 **Table of Contents** _generated with [DocToc](http://doctoc.herokuapp.com/)_
 
-
 - [js-Program 牛客 js 编程题收集](#js-Program牛客js编程题收集)
-  - 一
-    - [1.如果数组中存在 item，则返回元素在数组中的位置，否则返回 -1](#1.如果数组中存在item则返回元素在数组中的位置否则返回-1)
-    - [2.计算给定数组 arr 中所有元素的总和](#2.计算给定数组arr中所有元素的总和)
+   - [1.如果数组中存在 item，则返回元素在数组中的位置，否则返回 -1](#1如果数组中存在item则返回元素在数组中的位置否则返回-1)
+   - [2.计算给定数组 arr 中所有元素的总和](#2计算给定数组arr中所有元素的总和)
   
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -17,9 +15,7 @@
 
 牛客网的编程题，做完顺便总结笔记，便于记忆
 
-## 一
-
-### 1.如果数组中存在 item，则返回元素在数组中的位置（索引），否则返回 -1
+## 1.如果数组中存在 item，则返回元素在数组中的位置（索引），否则返回 -1
 
 ```
 function indexOf(arr,item){
@@ -38,7 +34,7 @@ function indexOf(arr,item){
 }
 ```
 
-### 2.计算给定数组 arr 中所有元素的总和
+## 2.计算给定数组 arr 中所有元素的总和
 
 ```
 /*1.遍历数组*/
