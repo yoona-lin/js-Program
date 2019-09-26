@@ -14,8 +14,16 @@
    - [在数组arr末尾添加元素item。不要直接修改数组arr，结果返回新的数组](#在数组arr末尾添加元素item不要直接修改数组arr结果返回新的数组)
    - [删除数组 arr 最后一个元素。不要直接修改数组 arr，结果返回新的数组](#删除数组arr最后一个元素不要直接修改数组arr结果返回新的数组)
    - [在数组arr开头添加元素item。不要直接修改数组arr，结果返回新的数组](#在数组arr开头添加元素item不要直接修改数组arr结果返回新的数组)
-   - [](#)
-   - [](#)
+   - [删除数组arr第一个元素。不要直接修改数组arr，结果返回新的数组](#删除数组arr第一个元素不要直接修改数组arr结果返回新的数组)
+   - [合并数组arr1和数组arr2。不要直接修改数组arr，结果返回新的数组](#合并数组arr1和数组arr2不要直接修改数组arr结果返回新的数组)
+   - [在数组arr的index处添加元素item。不要直接修改数组arr，结果返回新的数组](#在数组arr的index处添加元素item不要直接修改数组arr结果返回新的数组)
+   - [统计数组arr中值等于item的元素出现的次数](#统计数组arr中值等于item的元素出现的次数)
+   - [找出数组arr中重复出现过的元素](#找出数组arr中重复出现过的元素)
+   - [为数组arr中的每个元素求二次方。不要直接修改数组arr，结果返回新的数组](#为数组arr中的每个元素求二次方不要直接修改数组arr结果返回新的数组)
+   - [在数组arr中，查找值与item相等的元素出现的所有位置](#在数组arr中查找值与item相等的元素出现的所有位置)
+   - [修改js代码中parseInt的调用方式，使之通过全部测试用例](#修改js代码中parseInt的调用方式，使之通过全部测试用例)
+   - [计时器](#计时器)
+   - [流程控制，fizzBuzz函数](#流程控制fizzBuzz函数)
    - [](#)
    - [](#)
   
@@ -111,12 +119,12 @@
    }
 
 /*2. slice() 方法，slice() 方法可从已有的数组中返回选定的元素*/
-
+//arrayObject.slice(start,end):返回一个新的数组，包含从 start 到 end （不包括该元素）的 arrayObject 中的元素。
    function remove(arr, item){
       var Arr = arr.slice(0);     // slice(0),将整个数组拷贝到Arr新数组
       for(i = 0; i < Arr.length; i++){
           if(Arr[i] == item){
-              Arr.splice(i, 1);   // 存在相同的就删了，splice(i, 1)
+              Arr.splice(i, 1);   // 存在相同的就删了，splice(i, 1),i位置元素删除；splice(i,0,n):在i位置插入一个n元素
               i--;             //这里的i--不太懂
           }
       }
@@ -279,7 +287,6 @@ eval('[' + String(['1', '2', '3']) + ']') // [1,2,3]
     
 ```
 
-
 ## 在数组arr开头添加元素item。不要直接修改数组arr，结果返回新的数组
 
 ```
@@ -321,20 +328,273 @@ eval('[' + String(['1', '2', '3']) + ']') // [1,2,3]
 
 ```
 
+## 删除数组arr第一个元素。不要直接修改数组arr，结果返回新的数组
 
-##
+```
+/*迭代循环*/
+   function curtail(arr) {
+       var Arr = [];
+       for(var i = 1; i < arr.length; i++){
+           Arr.push(arr[i]);
+       }
+       return Arr;
+   }
+
+```
+
+## 合并数组arr1和数组arr2。不要直接修改数组arr，结果返回新的数组
 
 ```
 /**/
-
+   function concat(arr1, arr2) {
+       if(!Array.prototype.concat){
+           return false;
+       }else{
+           var Arr = [];
+           Arr = arr1.concat(arr2);
+           return Arr;
+       }
+   }
 
 ```
 
-## 
+## 在数组arr的index处添加元素item。不要直接修改数组arr，结果返回新的数组
 
+```
+/*1.slice+splice*/
+   function insert(arr, item, index) {
+       var Arr = arr.slice(0);
+       Arr.splice(index, 0, item);
+       return Arr;
+   };
 
+/*2.利用slice+concat*/
+   function insert(arr, item, index) {
+       return arr.slice(0,index).concat(item,arr.slice(index));
+   }
+   
+/*3.利用concat +splice*/
+   function insert(arr, item, index) {
+       var newArr=arr.concat();
+       newArr.splice(index,0,item);
+       return newArr;
+   }
+   
+/*4.push.apply+splice*/
+   function insert(arr, item, index) {
+       var newArr=[];
+       [].push.apply(newArr, arr);
+       newArr.splice(index,0,item);
+       return newArr;
+   }
+   
+/*5.普通的迭代拷贝*/
+   function insert(arr, item, index) {
+       var newArr=[];
+       for(var i=0;i<arr.length;i++){
+           newArr.push(arr[i]);
+       }
+       newArr.splice(index,0,item);
+       return newArr;
+   }
 
+```
 
+## 统计数组arr中值等于item的元素出现的次数
+
+```
+/*循环对比*/
+function count(arr, item) {
+    var count = 0;
+    for(var i = 0; i < arr.length; i++){
+        if(arr[i] == item){
+            count += 1;
+        }
+    }
+    return count;
+}
+
+```
+
+## 找出数组arr中重复出现过的元素
+
+```
+/*双层循环对比查找*/
+function duplicates(arr) {
+    var newArr = [];
+    for(var i = 0; i < arr.length - 1; i++){
+        for(var j = i + 1; j < arr.length; j++){
+            if(arr[i] == arr[j] && newArr.indexOf(arr[i]) == -1){
+                newArr.push(arr[i]);
+            }
+        }
+    }
+    return newArr;
+}
+
+/*2.先对数组进行排序，判断前一个与后一个相等且没有保存的情况下，再把元素放到数组中去。*/
+function duplicates(arr) {
+    var newArr=[];
+    arr.sort();
+    for(var i =0;i<arr.length;i++){
+        if(arr[i]==arr[i+1]&&(newArr.indexOf(arr[i])==-1) ){
+            newArr.push(arr[i]);
+            i++;
+
+        }
+    }
+
+    return newArr;
+}
+```
+
+## 为数组arr中的每个元素求二次方。不要直接修改数组arr，结果返回新的数组
+
+```
+/*1.for循环*/
+   function square(arr) {
+      var newArr = [];
+       for(var i = 0; i < arr.length; i++){
+           newArr.push(arr[i] * arr[i]);
+       };
+       return newArr;
+   }
+
+/*2.map()*/
+    function square(arr) {
+      return arr.map(function (ele) {
+          return ele*ele;
+      });
+   }
+
+/*3.fotEach遍历*/
+   function square2(arr) {
+      var a = [];
+      arr.forEach(function (ele) {
+          return a.push(ele*ele)
+      })
+      return a;
+   } 
+```
+
+## 在数组arr中，查找值与item相等的元素出现的所有位置
+
+```
+/*迭代循环*/
+   function findAllOccurrences(arr, target) {
+       var indexArr = [];
+       for(var i = 0; i < arr.length; i++){
+           if(arr[i] == target){
+               indexArr.push(i);
+           }
+       }
+       return indexArr;
+   }
+
+```
+
+## 修改js代码中parseInt的调用方式，使之通过全部测试用例
+
+```
+//parseInt(string, radix) : 函数可解析一个字符串，并返回一个整数。
+//当忽略参数 radix , JavaScript 默认数字的基数如下:
+//如果 string 以 "0x" 开头，parseInt() 会把 string 的其余部分解析为十六进制的整数(十六进制转为十进制）。
+//如果 string 以 0 开头，那么 ECMAScript v3 允许 parseInt() 的一个实现把其后的字符解析为八进制或十六进制的数字。
+//如果 string 以 1 ~ 9 的数字开头，parseInt() 将把它解析为十进制的整数。
+
+/*为设置radix时*/
+   function parse2Int(num) {
+       var reg = /[a-zA-Z]/g;
+      var res = new RegExp(/^(?![^a-zA-Z]+$)/);
+      if(res.test(num)){
+       //匹配参数中所有大小写字母，如果有就删了字母，并将参数用该字母拆分成多个元素放在数组中，parseInt该数组第一个元素
+         return parseInt(num.split(reg)[0]);
+      }
+       //如果不含字母，直接parseInt
+       return parseInt(num);
+   }
+   
+/*当设置了radix时，遇到非数字字符会直接忽略后面的字符*/
+   function parse2Int(num) {
+       return parseInt(num,10);
+   }
+   
+```
+
+## 计时器
+
+```
+//实现一个打点计时器，要求
+   1、从 start 到 end（包含 start 和 end），每隔 100 毫秒 console.log 一个数字，每次数字增幅为 1
+   2、返回的对象中需要包含一个 cancel 方法，用于停止定时操作
+   3、第一个数需要立即输出
+   
+/*1.setTimeout函数*/
+   function count(start, end) {
+       if(start <= end){
+           console.log(start++);
+           st = setTimeout(function(){
+               count(start, end);
+           }, 100);
+       }
+       return {
+           cancel: function(){
+               clearTimeout(st);
+           }
+       }
+   }
+
+/*2.setInterval函数*/
+   function count(start, end) {
+       console.log(start++);
+       var timer = setInterval(function () {
+           if (start <= end) {
+               console.log(start++)
+           } 
+       }, 100);
+       return {
+           cancel: function () {
+               clearinterval(timer)
+           }
+       }
+   }
+```
+
+## 流程控制，fizzBuzz函数
+
+```
+/*1.按照流程条件判断*/
+//百度答案也是这样，但牛客没通过验证
+   function fizzBuzz(num) {
+       if(num%3==0&&num%5==0){
+           return "fizzbuzz";
+       }else if(num%3==0){
+           return "fizz";
+       }else if(num%5==0){
+           return "buzz";
+       }else if(typeof(num)!="number"){
+           return false;
+       }else{
+           return num;
+       }
+   }
+
+/*2.*/
+   function fizzBuzz(num){
+    if(num && typeof num == 'number'){
+        if(num % 3 == 0 && num % 5 == 0){
+            return 'fizzbuzz'
+        }else if(num % 3 == 0){
+            return 'fizz'
+        }else if(num % 5 == 0){
+            return 'buzz'
+        } else{
+            return num;
+        }
+     }else{
+        return false;
+    }
+```
 
 
 
