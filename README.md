@@ -24,6 +24,16 @@
    - [修改js代码中parseInt的调用方式，使之通过全部测试用例](#修改js代码中parseInt的调用方式，使之通过全部测试用例)
    - [计时器](#计时器)
    - [流程控制，fizzBuzz函数](#流程控制fizzBuzz函数)
+   - [将数组arr中的元素作为调用函数fn的参数](#将数组arr中的元素作为调用函数fn的参数)
+   - [将函数fn的执行上下文改为obj对象](#将函数fn的执行上下文改为obj对象)
+   - [返回函数，实现函数functionFunction](#返回函数实现函数functionFunction)
+   - [使用闭包，实现函数makeClosures函数](#使用闭包实现函数makeClosures函数)
+   - [使用arguments](#使用arguments)
+   - [或运算](#或运算)
+   - [且运算](#且运算)
+   - [模块，完成函数createModule函数](#模块完成函数createModule函数)
+   - [二进制转换](#二进制转换)
+   - [](#)
    - [](#)
    - [](#)
   
@@ -596,6 +606,243 @@ function duplicates(arr) {
     }
 ```
 
+## 将数组arr中的元素作为调用函数fn的参数
+
+```
+//一般情况下都是对象调用函数，但此处是函数调用数组对象,用call(), apply()。第一个参数是传给当前函数对象。但是call()需要将参数挨个列出，apply直接传入数组对象
+   function argsAsArray(fn, arr) {
+      return fn.apply(this,arr);
+   }
+
+```
+
+## 将函数fn的执行上下文改为obj对象
+
+```
+//
+   function speak(fn, obj) {
+      return fn.call(obj);
+   }
+
+//三种方案
+//apply
+   function speak(fn, obj) {
+       return fn.apply(obj);
+   }
+
+//call
+   function speak(fn, obj) {
+       return fn.call(obj);
+   }
+   
+//bind
+   function speak(fn, obj) {
+       return fn.bind(obj)();
+   }
+```
+
+## 返回函数，实现函数functionFunction
+
+```
+/**/
+//实现函数 functionFunction，调用之后满足如下条件：
+1、返回值为一个函数 f
+2、调用返回的函数 f，返回值为按照调用顺序的参数拼接，拼接字符为英文逗号加一个空格，即 ', '
+3、所有函数的参数数量为 1，且均为 String 类型
+
+   function functionFunction(str) {
+      var f = function(s){
+         return str + ', ' + s;
+      }
+      return f;
+   }
+   
+//一个闭包就搞定了
+   function functionFunction (arg1) {
+       return function(arg2){
+           return arg1 + ', ' + arg2;
+       };
+   }
+```
+
+## 使用闭包，实现函数makeClosures函数
+
+```
+//实现函数 makeClosures，调用之后满足如下条件：
+1、返回一个函数数组 result，长度与 arr 相同
+2、运行 result 中第 i 个函数，即 result[i]()，结果与 fn(arr[i]) 相同
+
+//看到题目我首先想到的是使用闭包时因为作用域链引来的副作用，（闭包只能得到包含函数中变量的最后一个值）如果直接用下面第一种写法会导致result中每个函数的参数都是arr[arr.length],在《JavaScript高级程序设计》书中提到的最典型的解决此问题的方法就是用一个立即执行的匿名函数代替闭包负值给数组，这个匿名函数有一个参数num，因为函数参数是按值传递的所以传递给num的就是当前for循环的值。接下来的是根据其他小伙伴的解决方案进行的总结，提供给新来的小伙伴一个总结，页方便自己以后看
+此外ES5提供了bind方法，apply(),call(),bind()方法在使用时如果已经对参数进行了定义
+又因为在此问题中用的是数组并且需要的是arr[i]所以用forEach()方法就不用考虑第一段中提到的问题
+
+
+//这种是错误的写法会导致result中每个函数的参数都是arr[arr.length]
+   function makeClosures(arr, fn) {
+       var result = new Array();
+        for(var i=0;i<arr.length;i++){
+           result[i] = function(){
+               return fn(arr[i]);            
+           };
+       }
+       return result;
+    }
+
+//参考《JavaScript高级程序设计》的典型方法
+   function makeClosures(arr, fn) {
+       var result = new Array();
+       for(var i=0;i<arr.length;i++){
+           result[i] = function(num){
+               return function(){
+                   return fn(num);
+
+               }
+           }(arr[i]);
+       }
+       return result;
+   }
+
+//使用ES5的bind()方法
+   function makeClosures(arr, fn) {
+       var result = new Array();
+       for(var i=0;i<arr.length;i++){
+           result[i] = fn.bind(null,arr[i]);
+       }
+       return result;
+   }
+
+//使用forEach()
+   function makeClosures(arr, fn) {
+       var result = new Array();
+       arr.forEach(function(curr){
+           result.push(function(){return fn(curr)});
+       })
+       return result;
+   }
+```
+
+## 使用arguments
+
+```
+//函数 useArguments 可以接收 1 个及以上的参数。请实现函数 useArguments，返回所有调用参数相加后的结果。本题的测试参数全部为 Number 类型，不需考虑参数转换。
+
+   function useArguments() {
+      var result = 0;
+         for(var i = 0; i < arguments.length; i++){
+            result += arguments[i];
+         }
+      return result;
+   }
+   
+   function useArguments() {
+       var arr=Array.prototype.slice.call(arguments)//把arguments类数组转化为数组
+       return eval(arr.join("+"));//求和
+   }
+```
+
+## 或运算
+
+```
+//返回参数 a 和 b 的逻辑或运算结果
+   function or(a, b) {
+      return a || b
+   }
+```
+
+## 且运算
+
+```
+//返回参数 a 和 b 的逻辑且运算结果
+//且运算符"&&"的运算规则是：如果第一个运算子的布尔值为true，则返回第二个运算子的值（注意是值，不是布尔值）；如果第一个运算子的布尔值为false，则直接返回第一个运算子的值，且不再对第二个运算子求值。
+   function and(a, b) {
+      return a && b;
+   }
+```
+
+## 模块，完成函数createModule函数
+
+```
+//完成函数 createModule，调用之后满足如下要求：
+1、返回一个对象
+2、对象的 greeting 属性值等于 str1， name 属性值等于 str2
+3、对象存在一个 sayIt 方法，该方法返回的字符串为 greeting属性值 + ', ' + name属性值
+
+//原型模式：
+   function createModule(str1, str2) {
+       function Obj()
+       {
+           this.greeting = str1;
+           this.name = str2;
+       }
+       Obj.prototype.sayIt = function(){return this.greeting + ", " + this.name;}
+       return new Obj(); 
+   }
+
+//构造函数模式：
+   function createModule(str1, str2) {
+       function Obj()
+       {
+           this.greeting = str1;
+           this.name = str2;
+           this.sayIt = function(){return this.greeting + ", " + this.name;}
+       }
+       return new Obj();   
+   }
+
+//创建对象模式：
+   function createModule(str1, str2) {
+       function CreateObj()
+       {
+           obj = new Object;
+           obj.greeting = str1;
+           obj.name = str2;
+           obj.sayIt = function(){return this.greeting + ", " + this.name;}
+           return obj;
+       }
+       return CreateObj();   
+   }
+
+//字面量模式：
+   function createModule(str1, str2) {
+       var obj =
+         {
+             greeting : str1,
+             name : str2,
+             sayIt : function(){return this.greeting + ", " + this.name;}
+         };
+       return obj;   
+   }
+
+```
+
+## 二进制转换
+
+```
+//获取数字 num 二进制形式第 bit 位的值。注意：
+1、bit 从 1 开始
+2、返回 0 或 1
+3、举例：2 的二进制为 10，第 1 位为 0，第 2 位为 1
+
+   function valueAtBit(num, bit) {
+      var str = num.toString(2).split('').reverse();
+      return str[bit-1];
+   }
+   
+```
+
+## 
+
+```
+//
+
+```
+
+## 
+
+```
+//
+
+```
 
 
 
